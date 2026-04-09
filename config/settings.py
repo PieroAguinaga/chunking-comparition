@@ -27,6 +27,7 @@ class Settings(BaseSettings):
     azure_openai_endpoint: str = Field(..., description="Azure OpenAI resource endpoint")
     azure_openai_api_key: str = Field(..., description="Azure OpenAI API key")
     azure_openai_api_version: str = Field(default="2024-12-01-preview")
+    azure_embedding_deployment: str = Field(default="text-embedding-3-small")
     llm_temperature: float = Field(default=0.0)
     llm_max_tokens: int = Field(default=2048)
 
