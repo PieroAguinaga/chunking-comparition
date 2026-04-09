@@ -1,0 +1,11 @@
+# Core LLM & orchestration
+langchain
+langchain-openai
+langchain-experimental
+langchain-text-splitters
+langgraph
+supabase
+psycopg2-binary
+python-dotenv
+tqdm
+pydantic
