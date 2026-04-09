@@ -45,9 +45,9 @@ from supabase import create_client
 from supabase_utils.database_controller import insert_chunks_to_db
 from tqdm import tqdm
 
-from chunck_agent.interface import agentic_chunker
+from chunk_agent.interface import agentic_chunker
 from chunkers import markdown_header_chunker, page_chunker, semantic_chunker
-from llm import get_llm, get_embeddings
+from utils.llm import get_llm, get_embeddings
 from config.settings import settings
 
 load_dotenv()

@@ -48,7 +48,7 @@ def verify_env():
 
 def verify_azure():
     """Send a minimal prompt to Azure OpenAI and verify a response is returned."""
-    from llm import get_llm
+    from utils.llm import get_llm
     llm = get_llm()
     response = llm.invoke("Reply with the single word: OK")
     assert response.content.strip(), "Empty response from Azure OpenAI"

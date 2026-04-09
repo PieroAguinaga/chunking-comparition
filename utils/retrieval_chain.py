@@ -25,7 +25,7 @@ import os
 from dotenv import load_dotenv
 from supabase import create_client
 from config.settings import settings
-from llm import get_embeddings
+from utils.llm import get_embeddings
 
 load_dotenv()
 
