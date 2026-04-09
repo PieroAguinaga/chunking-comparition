@@ -48,7 +48,7 @@ def verify_env():
 
 def verify_azure():
     """Send a minimal prompt to Azure OpenAI and verify a response is returned."""
-    from agent.llm import get_llm
+    from llm import get_llm
     llm = get_llm()
     response = llm.invoke("Reply with the single word: OK")
     assert response.content.strip(), "Empty response from Azure OpenAI"
@@ -63,33 +63,15 @@ def verify_supabase_connection():
     client.table("conversation_history").select("id").limit(1).execute()
 
 
-def verify_supabase_tables():
-    """Check that all three IATA tables exist in Supabase."""
-    from supabase import create_client
-    from config.settings import settings
-    client = create_client(settings.supabase_url, settings.supabase_service_role_key)
-    tables = ["conversation_history", "papers", "paper_embeddings"]
-    for table in tables:
-        client.table(table).select("id").limit(1).execute()
-
-
-
-def verify_arxiv():
-    """Run a minimal arXiv search to confirm the API is reachable."""
-    from agent.tools.search_tool import _fetch_arxiv
-    papers = _fetch_arxiv("transformer", max_results=1)
-    assert len(papers) > 0, "arXiv returned no results"
 
 
 def main():
-    print("\n── IATA Setup Verification ──────────────────────────────\n")
+    print("\n── Project Setup Verification ──────────────────────────────\n")
 
     checks = [
         ("Environment variables",   verify_env),
         ("Azure OpenAI connection", verify_azure),
         ("Supabase connection",     verify_supabase_connection),
-        ("Supabase tables exist",   verify_supabase_tables),
-        ("arXiv API reachable",     verify_arxiv),
     ]
 
 
@@ -100,7 +82,7 @@ def main():
     print(f"\n── Result: {passed}/{total} checks passed ─────────────────────\n")
 
     if passed == total:
-        print("  Everything looks good. Run: python run.py\n")
+        print("  Everything looks good.\n")
         sys.exit(0)
     else:
         print("  Fix the issues above, then re-run this script.\n")
