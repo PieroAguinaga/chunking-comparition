@@ -15,6 +15,75 @@ or pass parameters explicitly when using a remote project.
 """
 
 import psycopg2
+import time
+from langchain_core.documents import Document
+from tqdm import tqdm
+from supabase import create_client
+
+
+# ---------------------------------------------------------------------------
+# Database insertion
+# ---------------------------------------------------------------------------
+
+def insert_chunks_to_db(
+    chunks:           list[Document],
+    embeddings_model,
+    supabase_client,
+    table_name:       str  = "documents",
+    batch_size:       int  = 50,
+) -> None:
+    """
+    Generate embeddings for every chunk and bulk-insert them into Supabase.
+
+    Each chunk row stored in the database contains:
+        paper_id    — identifier of the source document
+        method      — chunking strategy that produced this chunk
+        chunk_index — zero-based position within the strategy's output
+        content     — raw text of the chunk
+        embedding   — 1536-dimensional float vector (text-embedding-3-small)
+        metadata    — full metadata dict (JSON)
+
+    Rows are sent in batches to avoid hitting Supabase request size limits.
+    A short sleep between batches prevents rate-limit errors from the
+    embeddings API.
+
+    Args:
+        chunks:           List of LangChain Documents to embed and store.
+        embeddings_model: Initialised LangChain embeddings instance.
+        table_name:       Target Supabase table (default: "documents").
+        batch_size:       Number of rows per insert request (default: 50).
+    """
+    rows: list[dict] = []
+
+    for i, chunk in enumerate(tqdm(chunks, desc="Generating embeddings & inserting")):
+        embedding_vector = embeddings_model.embed_query(chunk.page_content)
+
+        rows.append({
+            "paper_id":    chunk.metadata["paper_id"],
+            "method":      chunk.metadata["method"],
+            "chunk_index": chunk.metadata["chunk_index"],
+            "content":     chunk.page_content,
+            "embedding":   embedding_vector,
+            "metadata":    chunk.metadata,
+        })
+
+        if len(rows) >= batch_size:
+            try:
+                supabase_client.table(table_name).insert(rows).execute()
+            except Exception as exc:
+                print(f"[insert_chunks_to_db] Error inserting batch at chunk {i}: {exc}")
+            rows = []
+            time.sleep(0.2)   # brief pause to respect API rate limits
+
+    # Flush any remaining rows
+    if rows:
+        try:
+            supabase_client.table(table_name).insert(rows).execute()
+        except Exception as exc:
+            print(f"[insert_chunks_to_db] Error inserting final batch: {exc}")
+
+    print(f"\nSuccessfully inserted {len(chunks)} chunks into '{table_name}'.")
+
 
 
 def table_exists(cursor: "psycopg2.extensions.cursor", table_name: str) -> bool:

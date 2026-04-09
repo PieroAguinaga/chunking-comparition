@@ -7,7 +7,7 @@ This makes it trivial to swap models or add tracing later.
 
 import os
 from dotenv import load_dotenv
-from langchain_openai import AzureChatOpenAI
+from langchain_openai import AzureChatOpenAI, AzureOpenAIEmbeddings
 
 from config.settings import settings
 
@@ -32,3 +32,15 @@ def get_llm(temperature: float | None = None, streaming: bool = False) -> AzureC
         streaming=streaming,
     )
 
+
+def get_embeddings() -> AzureOpenAIEmbeddings:
+    """
+    Return a configured AzureOpenAIEmbeddings instance.
+    Used by the RAG pipeline to embed paper abstracts and query vectors.
+    """
+    return AzureOpenAIEmbeddings(
+        azure_deployment=settings.azure_embedding_deployment,
+        azure_endpoint=settings.azure_openai_endpoint,
+        api_key=settings.azure_openai_api_key,
+        api_version=settings.azure_openai_api_version,
+    )
