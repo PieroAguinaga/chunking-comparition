@@ -1,0 +1,202 @@
+[
+  {
+    "id": 1,
+    "category": "methodology",
+    "difficulty": "easy",
+    "question": "What activation function does the tutorial use instead of ReLU?",
+    "answer": "The tutorial uses the softplus function, defined as σ(s) = log(1 + exp(s)), because it is smooth, always positive, and avoids dead (inactive) neurons that can occur with ReLU.",
+    "source_section": "II.A"
+  },
+  {
+    "id": 2,
+    "category": "methodology",
+    "difficulty": "easy",
+    "question": "What is the basic architecture of a Multilayer Perceptron (MLP)?",
+    "answer": "An MLP consists of an input layer, one or more hidden layers, and an output layer. Each neuron applies a linear transformation with weights W and bias b, followed by a nonlinear activation function.",
+    "source_section": "II.A"
+  },
+  {
+    "id": 3,
+    "category": "methodology",
+    "difficulty": "medium",
+    "question": "How is a fully connected (FC) layer mathematically defined?",
+    "answer": "FC(X) = σ(XW + b), where X ∈ R^(n×c) is the input with n samples of dimension c, W ∈ R^(c×c') is the weight matrix, b ∈ R^(c') is the bias vector, and σ(·) is the nonlinear activation function.",
+    "source_section": "II.A"
+  },
+  {
+    "id": 4,
+    "category": "methodology",
+    "difficulty": "medium",
+    "question": "What loss function is used for classification tasks in the paper?",
+    "answer": "For classification, the categorical cross-entropy loss is used: L = -Σ yk·log(pk), where pk is the predicted probability of class k and yk is the one-hot encoded true label. The output layer uses a softmax activation.",
+    "source_section": "II.B"
+  },
+  {
+    "id": 5,
+    "category": "methodology",
+    "difficulty": "medium",
+    "question": "What loss function is used for regression tasks?",
+    "answer": "For regression, the mean squared error (MSE) is used: L = (1/n) Σ(yi - f(xi))², where f(xi) is the network prediction for input xi. The output layer uses a linear activation.",
+    "source_section": "II.B"
+  },
+  {
+    "id": 6,
+    "category": "methodology",
+    "difficulty": "hard",
+    "question": "How does the convolution operation work in a CNN according to the paper?",
+    "answer": "The convolution applies a filter K ∈ R^(kh×kw×c) over an input tensor X ∈ R^(h×w×c), producing a feature map Y via: Y(k)_ij = σ(Σ K(k)_uvc · X_(i+u,j+v,c) + b(k)). The filter slides over the input computing element-wise products and summing them, followed by the activation function.",
+    "source_section": "III.B"
+  },
+  {
+    "id": 7,
+    "category": "methodology",
+    "difficulty": "hard",
+    "question": "What is the STFT and how is it used in the paper?",
+    "answer": "The Short-Time Fourier Transform (STFT) decomposes a signal into time-localized frequency components: S(t,f) = |Σ x[n+t]·w[n]·e^(-j2πfn/L)|, where w[n] is a window function of length L. It is used to convert acoustic signals into 2D spectrograms (Spectrogram = 20·log10(|S(t,f)|)) that CNNs can process as images.",
+    "source_section": "III.C"
+  },
+  {
+    "id": 8,
+    "category": "dataset",
+    "difficulty": "easy",
+    "question": "At what sampling rate were the acoustic signals recorded in the OLTC case study?",
+    "answer": "The OLTC acoustic signals were recorded at 48 kHz.",
+    "source_section": "III.D"
+  },
+  {
+    "id": 9,
+    "category": "dataset",
+    "difficulty": "medium",
+    "question": "How many OLTC states does the CNN model classify and what are they?",
+    "answer": "The CNN classifies 7 states: #1 Idle state and motor operation, #2 Motor starts, #3 Geneva drive activation, #4 Tap selector stops and end of Geneva drive, #5 Diverter switch operation, #6 Motor stops, #7 Events associated with the mechanical braking process.",
+    "source_section": "III.D"
+  },
+  {
+    "id": 10,
+    "category": "dataset",
+    "difficulty": "medium",
+    "question": "What types of data are used for transformer monitoring according to Table I?",
+    "answer": "Four data types are used: (1) DGA — low-dimensional vectors with gas ratios, (2) Load and temperature — 1D time series with trends and seasonal effects, (3) OLTC acoustics/vibration — waveforms between 20 kHz and 1 MHz with time-frequency bursts, (4) IR/thermal imaging — 2D images with spatial hot-spots.",
+    "source_section": "III.A"
+  },
+  {
+    "id": 11,
+    "category": "metrics",
+    "difficulty": "easy",
+    "question": "What classification accuracy did the CNN model achieve for OLTC acoustic monitoring?",
+    "answer": "The CNN model achieved over 98% classification accuracy on unseen audio signals.",
+    "source_section": "III.D"
+  },
+  {
+    "id": 12,
+    "category": "metrics",
+    "difficulty": "medium",
+    "question": "Which RL algorithms were compared and which one performed best?",
+    "answer": "Three algorithms were compared: DQN with linear epsilon-greedy decay, DQN with exponential epsilon-greedy decay, and PPO (Proximal Policy Optimization). PPO achieved the best performance, with the lowest mean and variance of peak inrush currents, yielding safer and more consistent energization behavior.",
+    "source_section": "IV.C"
+  },
+  {
+    "id": 13,
+    "category": "metrics",
+    "difficulty": "medium",
+    "question": "How is the reward function defined in the RL system for inrush current minimization?",
+    "answer": "The reward function is: r = -Imax if Imax > 1, and r = 1 - Imax otherwise. This incentivizes the agent to find energization strategies that keep the inrush current below the rated current (1 pu).",
+    "source_section": "IV.C"
+  },
+  {
+    "id": 14,
+    "category": "limitations",
+    "difficulty": "easy",
+    "question": "What limitations of neural networks are mentioned in the paper?",
+    "answer": "The limitations include: a tendency to overfit when training data are scarce, limited interpretability, and the need for careful regularization to ensure generalization.",
+    "source_section": "II.C"
+  },
+  {
+    "id": 15,
+    "category": "limitations",
+    "difficulty": "medium",
+    "question": "What limitation did the CNN model exhibit under real-world noise conditions?",
+    "answer": "While the CNN maintained high accuracy under synthetic noise, real-world tests revealed sensitivity to background humming, requiring a preprocessing denoising step for optimal performance.",
+    "source_section": "III.D"
+  },
+  {
+    "id": 16,
+    "category": "limitations",
+    "difficulty": "medium",
+    "question": "What topics are explicitly stated as out of scope for this tutorial?",
+    "answer": "The following are out of scope: feature selection for improved forecasting, surrogate modelling for transformer thermal dynamics, analysis of the impact of extreme events on transformer ageing, and broader maintenance planning approaches.",
+    "source_section": "I"
+  },
+  {
+    "id": 17,
+    "category": "comparison",
+    "difficulty": "medium",
+    "question": "How does a CNN differ from an MLP when processing transformer monitoring data?",
+    "answer": "MLPs process each input feature independently and fail to exploit local structure or spatio-temporal correlations. CNNs employ learnable filters (kernels) that slide across the input detecting localized features regardless of their position, are more parameter-efficient, and capture hierarchical patterns from low-level edges to complex patterns like OLTC acoustic signatures.",
+    "source_section": "III.A"
+  },
+  {
+    "id": 18,
+    "category": "comparison",
+    "difficulty": "hard",
+    "question": "How does RL compare to traditional control methods for transformer management?",
+    "answer": "Traditional methods (such as fixed switching sequences) rely on static settings, cannot easily adapt to varying load profiles or fluctuating grid conditions, and rarely integrate real-time health signals. RL learns optimal control strategies through interaction with the environment without requiring labeled datasets or expert heuristics, can dynamically adapt to context, and balances multiple conflicting objectives through custom reward functions.",
+    "source_section": "IV.A"
+  },
+  {
+    "id": 19,
+    "category": "comparison",
+    "difficulty": "medium",
+    "question": "What advantage do CNNs have over traditional feature-engineered ML models for OLTC monitoring?",
+    "answer": "CNNs exhibited superior adaptability and generalization across varying acoustic environments compared to traditional feature-engineered machine learning models. This is because CNNs automatically learn relevant features from raw data rather than depending on manually designed features.",
+    "source_section": "III.D"
+  },
+  {
+    "id": 20,
+    "category": "context",
+    "difficulty": "easy",
+    "question": "Why are power transformers considered critical assets in the power grid?",
+    "answer": "Power transformers are key components in the reliable operation of the power grid. Their reliability directly impacts grid resilience and stability. Monitoring their health is essential to avoid costly failures and unplanned outages, especially in critical facilities such as nuclear power plants.",
+    "source_section": "I"
+  },
+  {
+    "id": 21,
+    "category": "context",
+    "difficulty": "medium",
+    "question": "What is PHM and what methodologies does it integrate?",
+    "answer": "PHM (Prognostics & Health Management) is a health management paradigm that integrates different predictive methodologies to improve the reliability of engineering components and systems. It is at the heart of modern condition monitoring technology, where sensor data, physics knowledge, and engineering expertise are combined to develop anomaly detection, diagnostics, prognostics, and maintenance planning tools.",
+    "source_section": "I"
+  },
+  {
+    "id": 22,
+    "category": "context",
+    "difficulty": "hard",
+    "question": "What is an MDP and how is it applied to the transformer control problem?",
+    "answer": "A Markov Decision Process (MDP) is defined by the tuple (S, A, P, R, γ) where S is the set of possible system states (e.g., transformer fluxes, grid voltage, ambient temperature), A is the set of available actions (e.g., energization angle, tap changer positions), P(s'|s,a) are state transition probabilities, R(s,a) is the reward function, and γ is the discount factor. It is applied to transformer control so that an RL agent learns to minimize inrush current by selecting the optimal circuit breaker closing angle.",
+    "source_section": "IV.B"
+  },
+  {
+    "id": 23,
+    "category": "methodology",
+    "difficulty": "hard",
+    "question": "What are the inputs and outputs of the transformer simulation environment used for RL training?",
+    "answer": "The environment receives as inputs the three-phase remanent flux values (φ1, φ2, φ3) and the selected switching angle (the agent's action). It outputs the peak inrush current Imax, which is used to compute the agent's reward.",
+    "source_section": "IV.C"
+  },
+  {
+    "id": 24,
+    "category": "dataset",
+    "difficulty": "medium",
+    "question": "What is the duration of the audio segments processed by the OLTC CNN model?",
+    "answer": "The audio segments have a duration of 360 ms, corresponding to 17×1024 samples at a sampling rate of 48 kHz.",
+    "source_section": "III.D"
+  },
+  {
+    "id": 25,
+    "category": "context",
+    "difficulty": "medium",
+    "question": "What future research directions are mentioned in the conclusions?",
+    "answer": "Future directions include: (1) improving noise robustness in audio-based monitoring, (2) integrating self-supervised learning for adaptive diagnosis of previously unseen operating patterns, (3) combining RL decision-making strategies with Remaining Useful Life (RUL) prediction models for predictive cost-effective maintenance scheduling. Part II will extend the approaches toward physics-informed methods and uncertainty quantification.",
+    "source_section": "V"
+  }
+]
